@@ -50,6 +50,18 @@ where
         UnionFind { parent, rank }
     }
 
+    /// Returns the number of sets.
+    pub fn len(&self) -> usize {
+        self.parent.len()
+    }
+
+    /// Creates `n` new sets.
+    pub fn extend(&mut self, n: usize) {
+        self.rank.extend(std::iter::repeat(0).take(n));
+        self.parent
+            .extend((self.parent.len()..(self.parent.len() + n)).map(K::new));
+    }
+
     /// Return the representative for `x`.
     ///
     /// **Panics** if `x` is out of bounds.

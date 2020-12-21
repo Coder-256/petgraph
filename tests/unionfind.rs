@@ -7,7 +7,7 @@ use std::collections::HashSet;
 
 #[test]
 fn uf_test() {
-    let n = 8;
+    let mut n = 8;
     let mut u = UnionFind::new(n);
     for i in 0..n {
         assert_eq!(u.find(i), i);
@@ -27,15 +27,28 @@ fn uf_test() {
     u.union(5, 6);
     assert_eq!(u.find(6), u.find(5));
     assert!(u.find(6) != u.find(7));
+    assert_eq!(u.len(), 8);
+    n += 4;
+    u.extend(4);
+    assert_eq!(u.len(), 12);
+    u.union(11, 10);
+    u.union(3, 9);
+    assert_eq!(u.find(8), u.find(8));
+    assert_eq!(u.find(3), u.find(9));
+    assert_eq!(u.find(1), u.find(9));
+    assert_eq!(u.find(10), u.find(11));
+    assert!(u.find(2) != u.find(8));
+    assert!(u.find(2) != u.find(9));
+    assert!(u.find(9) != u.find(11));
 
-    // check that there are now 3 disjoint sets
+    // check that there are now 5 disjoint sets
     let set = (0..n).map(|i| u.find(i)).collect::<HashSet<_>>();
-    assert_eq!(set.len(), 3);
+    assert_eq!(set.len(), 5);
 }
 
 #[test]
 fn uf_test_with_equiv() {
-    let n = 8;
+    let mut n = 8;
     let mut u = UnionFind::new(n);
     for i in 0..n {
         assert_eq!(u.find(i), i);
@@ -55,10 +68,23 @@ fn uf_test_with_equiv() {
     u.union(5, 6);
     assert!(u.equiv(6, 5));
     assert!(!u.equiv(6, 7));
+    assert_eq!(u.len(), 8);
+    n += 4;
+    u.extend(4);
+    assert_eq!(u.len(), 12);
+    u.union(11, 10);
+    u.union(3, 9);
+    assert!(u.equiv(8, 8));
+    assert!(u.equiv(3, 9));
+    assert!(u.equiv(1, 9));
+    assert!(u.equiv(10, 11));
+    assert!(!u.equiv(2, 8));
+    assert!(!u.equiv(2, 9));
+    assert!(!u.equiv(9, 11));
 
-    // check that there are now 3 disjoint sets
+    // check that there are now 5 disjoint sets
     let set = (0..n).map(|i| u.find(i)).collect::<HashSet<_>>();
-    assert_eq!(set.len(), 3);
+    assert_eq!(set.len(), 5);
 }
 
 #[test]
